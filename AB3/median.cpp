@@ -6,7 +6,7 @@ ros::Publisher laser_pub;
 void laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 {
 	static int count = 0;
-	ROS_INFO("Got a laser scan with %d values and the 5th value is %f", scan->ranges.size(), scan->ranges[5]);
+	//ROS_INFO("Got a laser scan with %d values and the 5th value is %f", scan->ranges.size(), scan->ranges[5]);
 
 	//copy scan so we can modify it
 	sensor_msgs::LaserScan median(*scan);
