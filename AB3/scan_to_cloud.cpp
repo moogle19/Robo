@@ -22,6 +22,7 @@ void laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 	{
 		cloud.points[i].x = scan->ranges[i] * cos(scan->angle_min + (scan->angle_increment)*i);
 		cloud.points[i].y = scan->ranges[i] * sin(scan->angle_min + (scan->angle_increment)*i);
+		std::cout << "x: " << cloud.points[i].x << "y: "<< cloud.points[i].y << std::endl;
 	}
 
 	laser_pub.publish(cloud);
@@ -30,7 +31,7 @@ void laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 
 int main(int argc, char** argv)
 {
-	ros::init(argc, argv, "median");
+	ros::init(argc, argv, "scan_to_cloud");
 	ros::NodeHandle n;
 	ros::Subscriber sub = n.subscribe("/scan", 1, laserCallback);
 	laser_pub = n.advertise<sensor_msgs::PointCloud>("/cloud", 1);
