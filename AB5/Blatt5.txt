@@ -1,0 +1,13 @@
+5.2 :
+	1. dL = (Radradius*2*PI) * Ticks / (Ticks pro Umdrehung)
+	2. vL = dL / Zeit
+	3. 
+		x(n) = x(n-1) + v * t * sin(0(n-1) + (0/2) * t)
+		mit v = (vL + vR)/2
+		=> x = ( vL + vR ) / 2 * t * sin( ( ( vL-vR ) * t / Achsabstand ) / 2 )
+		   z = ( vL + vR ) / 2 * t * cos( ( ( vL-vR ) * t / Achsabstand ) / 2 )
+
+		   d = sqrt(x^2 + z^2)
+
+
+	4. 0 = ((vL-vR) * t) / Achsabstand
