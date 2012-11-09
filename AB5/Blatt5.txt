@@ -11,3 +11,17 @@
 
 
 	4. 0 = ((vL-vR) * t) / Achsabstand
+
+5.3 :
+	Translation:
+		x(n) = x(n-1) + v * t * sin(0(n-1) + (0/2) * t)
+		z(n) = z(n-1) + v * t * cos(0(n-1) + (0/2) * t)
+
+	Trajektorie:
+
+
+																xk			v * t * sin(0(k) + (0/2) * t)
+
+		P(k+1) = P(k) + (delta(xk), delta(zk), delta(0k)) = 	zk     +   	v * t * cos(0(k) + (0/2) * t)
+
+																0k			((vL-vR) * t) / Achsabstand
