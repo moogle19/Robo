@@ -10,42 +10,52 @@ void poseCallback(const kurt_msgs::EncoderConstPtr& msg){
     static tf::TransformBroadcaster br;
 
     //static variables to save old state
-    static double lasttime = 0;
-    static double oldx = 0;
-    static double oldy = 0;
-    static double oldtheta = 0;
+    static double lasttime = ros::Time::now().toSec();
+    static double oldx = 0.0;
+    static double oldy = 0.0;
+    static double oldtheta = 0.0;
 
     tf::Transform transform;
     tf::Quaternion rot;
-    double nowtime = ros::Time::now().toSec();
+    double nowtime = ros::Time::now().toSec(); //set nowtime to current time
     double deltatime = nowtime - lasttime;
-    double theta = 0, x = 0, y = 0;
+    double theta = 0.0;
+    double x = 0.0;
+    double y = 0.0;
 
-    /*std::cout << (msg->left) << std::endl;
-    std::cout << (msg->right) << std::endl;
-    std::cout << (msg->header) << std::endl;*/
+    //convert clicks into m/s 
     double left = msg->left * 0.379 / 21950; //converts to m/s
     double right = msg->right * 0.379 / 21950;
 
-    theta = ((left - right) * deltatime)/0.28; //achslaenge 0,28m
-    x = oldx + (left + right)/2 * deltatime * sin(oldtheta + theta/2 * deltatime);
-    y = oldy + (left + right)/2 * deltatime * cos(oldtheta + theta/2 * deltatime);
+    theta = (((left - right) * deltatime)/0.28) * 0.69; //achslaenge 0.28m winkelkorrektur 0.69
 
-    std::cout << "OLD: " <<  "Theta: " << oldtheta << " x: " << oldx << " y: " << oldy << std::endl; 
+    //calculate x-coord and y-coord
+    x = oldx + ((left + right)/2) * deltatime * sin(oldtheta + ((theta/2) * deltatime));
+    y = oldy + ((left + right)/2) * deltatime * cos(oldtheta + ((theta/2) * deltatime));
 
-    std::cout <<  "Theta: " << theta << " x: " << x << " y: " << y << std::endl; 
-    //x = x(n-1) + v * t * sin( theta(n-1) + (theta/2) * t )
-    //z = z(n-1) + v * t * cos( theta(n-1) + (theta/2) * t )
+    //std::cout << oldx << std::endl << x << std::endl<<std::endl;
 
+    //debug output
+    //std::cout << "Deltatime: " << deltatime << std::endl;
+    //std::cout << "OLD: " <<  "Theta: " << oldtheta << " x: " << oldx << " y: " << oldy << std::endl; 
+    //std::cout <<  "Theta: " << theta << " x: " << x << " y: " << y << std::endl; 
+    
+
+    //save old values
     lasttime = nowtime;
     oldtheta = theta;
     oldx = x;
     oldy = y;
+
+
     rot.setEuler(0.0, 0.0, theta);
     transform.setOrigin( tf::Vector3(x, y, 0.0) );
     transform.setRotation( rot );
 
-    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "encoder"));
+    //std::cout << "x: " << x << " y: " << y << std::endl;
+
+    //?????????????????? world laser richtig????????????????????????????
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "/world", "/laser")); 
 }
 
 int main(int argc, char** argv){
