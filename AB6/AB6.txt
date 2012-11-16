@@ -1,0 +1,29 @@
+/**
+ *	@author Valentin Bruder <vbruder@uos.de>
+ *	@author Kevin Seidel <keseidel@uos.de>
+ */
+Robotik 6.AB
+
+
+1.
+	A = Transitionsmodell = n x n - Matrix (modelliert spont. Transition)
+	B = Aktionsmodell = n x m - Matrix (Bu konvertiert u in Zustandsraum)
+	M = Sensormodell = l x n - Matrix (konvertiert Zustandsraum in Messraum)
+
+	n = Dimension des Zusands
+	m = Dimension der Aktionen
+	l = Dimension der Messung
+
+	n = 5 (x, z, theta, lambda, Pi)
+	m = 3 (rot(theta), tra(x), tra(z))
+	l = 4 (x, z, theta, lambda)
+
+	A = Einheitsmatrix, da keine spontane Transition ?????
+
+	B =
+
+			1	0	0	0	0
+	H = 	0	1	0	0	0
+			0	0	1	0	0
+			0	0	0	1	0
+			(Zustandsraum 5dim-Vektor(x, z, theta, lambda, pi) in Messraum 4dim-Vektor(x, z, theta, lambda))
