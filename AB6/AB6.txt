@@ -5,7 +5,7 @@
 Robotik 6.AB
 
 
-1.
+1.1:
 	A = Transitionsmodell = n x n - Matrix (modelliert spont. Transition)
 	B = Aktionsmodell = n x m - Matrix (Bu konvertiert u in Zustandsraum)
 	M = Sensormodell = l x n - Matrix (konvertiert Zustandsraum in Messraum)
@@ -34,3 +34,7 @@ Robotik 6.AB
 			0	0	0	1	0
 
 			(Zustandsraum 5dim-Vektor(x, z, theta, lambda, pi) in Messraum 4dim-Vektor(x, z, theta, lambda))
+
+1.2:
+	
+
