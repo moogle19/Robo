@@ -20,10 +20,17 @@ Robotik 6.AB
 
 	A = Einheitsmatrix, da keine spontane Transition ?????
 
-	B =
+	B =		1	0	0
+			0	1	0
+			0	0	1
+			0	0	0
+			0	0	0
 
-			1	0	0	0	0
-	H = 	0	1	0	0	0
+			(u 3dim Vektor(x, z, theta) in Zustandsraum 5dim-Vektor(x, z, theta, lambda, pi))
+
+	H =		1	0	0	0	0
+			0	1	0	0	0
 			0	0	1	0	0
 			0	0	0	1	0
+
 			(Zustandsraum 5dim-Vektor(x, z, theta, lambda, pi) in Messraum 4dim-Vektor(x, z, theta, lambda))
