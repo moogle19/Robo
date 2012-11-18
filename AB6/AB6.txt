@@ -36,5 +36,11 @@ Robotik 6.AB
 			(Zustandsraum 5dim-Vektor(x, z, theta, lambda, pi) in Messraum 4dim-Vektor(x, z, theta, lambda))
 
 1.2:
-	
 
+   Sig(u) =    0.05²   0    0.01    0    0
+                 0    0.05² 0.01    0    0
+               0.01   0.01  0.02²   0    0
+                 0     0     0    0.001² 0
+                 0     0     0      0    0
+	
+1.3:
