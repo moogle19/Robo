@@ -1,0 +1,7 @@
+1.
+
+2.
+	Der Intensitätswert i müsste in den Euklidischen Abstand mit einfließen so dass statt der Koordinaten (x,y,z) die Koordinaten (x,y,z,i) sind.
+
+3.
+	
