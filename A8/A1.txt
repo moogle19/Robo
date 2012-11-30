@@ -1,7 +1,15 @@
-1.
+1:
+    1.
 
-2.
-	Der Intensitätswert i müsste in den Euklidischen Abstand mit einfließen so dass statt der Koordinaten (x,y,z) die Koordinaten (x,y,z,i) sind.
+    2.
+	    Der Intensitätswert i müsste in den Euklidischen Abstand mit einfließen so dass statt der Koordinaten (x,y,z) die           Koordinaten (x,y,z,i) sind.
 
-3.
-	
+    3.
+    
+2:
+    rxgraph:
+        rxgraph zeigt die ROS-Nodes und Topics und deren Verbindung untereinander an.
+        Bei unserem Beispiel wird z.B. angezeigt, das unsere Node "/kurt_odometry" auf das Topic "/imu" der Node                    "/play_xyz" zugreift, welche ein bag-File abspielt.
+    
+    tf view_frames:  
+	    tf view_frames zeigt uns den aktuellen Transformationsbaum, also alle Transformationen zwischen den einzelnen               Koordinatensystemen die über tf gepublished werden.
