@@ -70,7 +70,7 @@ void encoderCallback(const kurt_msgs::Encoder::ConstPtr& encoder, const sensor_m
 	  mat << cos(dxt1.z()), sin(dxt1.z()), 0, -sin(dxt1.z()), cos(dxt1.z()), 0, 0, 0, 1;
 
 	  Eigen::Vector3f delta;
-	  delta << deltax, deltay, dtheta;
+	  delta << deltax, deltay, yaw;
 
 	  dxt1 = dxt1 + (mat * delta);
 
@@ -111,9 +111,12 @@ void encoderCallback(const kurt_msgs::Encoder::ConstPtr& encoder, const sensor_m
 	  matrix << pow(0.3, 2), 0, 0, 0, pow(0.3, 2), 0, 0, 0, pow(0.4, 2);
 	  kgain = sigma * (sigma + matrix).inverse();
 
+	  Eigen::Vector3f z;
+	  z << deltax, deltay, dtheta;
+
 	  Eigen::Vector3f ret;
 
-	  ret = dxt1;// + kgain * (-dxt1)
+	  ret = dxt1 + kgain * (z-dxt1);
 
 	  tf::Vector3 trans(ret.x(), ret.y(), 0.0);
 	  tf::Quaternion rot;
