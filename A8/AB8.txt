@@ -1,12 +1,15 @@
-1:
+Aufgabe 8.1:
     1.
 
     2.
-	    Der Intensitätswert i müsste in den Euklidischen Abstand mit einfließen so dass statt der Koordinaten (x,y,z) die           Koordinaten (x,y,z,i) sind.
+	    Der Intensitätswert i müsste in den Euklidischen Abstand mit einfließen, sodass statt der Koordinaten (x,y,z) die           Koordinaten (x,y,z,i) sind. Ggf. kann ein Gewichtungsfaktor eingebaut werden.
 
     3.
-    
-2:
+       Der Algorithmus konvergiert monoton gegen ein lokales Minimum der Fehlerfunktion. Dieses muss nicht zwangsläufig das gewünschte globale Minimum sein.
+  
+
+  
+Aufgabe 8.2:
     rxgraph:
         rxgraph zeigt die ROS-Nodes und Topics und deren Verbindung untereinander an.
         Bei unserem Beispiel wird z.B. angezeigt, das unsere Node "/kurt_odometry" auf das Topic "/imu" der Node                    "/play_xyz" zugreift, welche ein bag-File abspielt.
