@@ -17,7 +17,7 @@ float k = 0.0, sig = 0.0;
 
 void encoderCallback(const kurt_msgs::Encoder::ConstPtr& encoder, const sensor_msgs::Imu::ConstPtr& imu)
 {
-	std::cout << "tst" << std::endl;
+	  std::cout << "tst" << std::endl;
 	  tf::Quaternion q;
 	  double roll, pitch, yaw;
 	  tf::quaternionMsgToTF(imu->orientation, q);
@@ -48,8 +48,11 @@ void encoderCallback(const kurt_msgs::Encoder::ConstPtr& encoder, const sensor_m
 	  double dtheta = (wheel_R - wheel_L) / axis_length * turning_adaptation;
 	  double hypothenuse = 0.5 * (wheel_L + wheel_R);
 
-	  x += hypothenuse * cos(theta + dtheta * 0.5);
-	  y += hypothenuse * sin(theta + dtheta * 0.5);
+
+	  double deltax = hypothenuse * cos(theta + dtheta * 0.5);
+	  double deltay = hypothenuse * sin(theta + dtheta * 0.5);
+	  x += deltax;
+	  y += deltay;
 
 	  k = pow((dtheta+0.1/10), 2.0)/(pow((dtheta+0.1/10), 2.0)+pow(0.004,2.0));
 	  sig = (1-k)*(sig+pow((dtheta+0.1/10), 2.0));
@@ -57,28 +60,69 @@ void encoderCallback(const kurt_msgs::Encoder::ConstPtr& encoder, const sensor_m
 
 	  theta += dtheta;
 
-	  tf::Vector3 trans(x, y, 0.0);
-	  tf::Quaternion rot;
-	  rot.setEuler(0.0, 0.0, theta);
-	  tf::Transform transform;
-	  transform.setOrigin(trans);
-	  transform.setRotation(rot);
-
 	  //br.sendTransform(tf::StampedTransform(transform, encoder->header.stamp, "/odom_combined", encoder->header.frame_id));
 
-	  Eigen::Vector3f dxt1;
+	  //f() bzw x t+1
+	  static Eigen::Vector3f dxt1;
 	  dxt1 << 0, 0, 0;
 
 	  Eigen::Matrix3f mat;
 	  mat << cos(dxt1.z()), sin(dxt1.z()), 0, -sin(dxt1.z()), cos(dxt1.z()), 0, 0, 0, 1;
 
 	  Eigen::Vector3f delta;
-	  delta << x, y, dtheta;
+	  delta << deltax, deltay, dtheta;
 
 	  dxt1 = dxt1 + (mat * delta);
 
 	  std::cout << dxt1;
 
+	  Eigen::Vector3f h(0, 0, 0);
+	  static float xsum = 0, ysum = 0,zsum = 0;
+	  static int count = 1;
+	  xsum += dxt1.x();
+	  ysum += dxt1.y();
+	  zsum += dxt1.z();
+
+	  //h()
+	  h << xsum/count, ysum/count, zsum/count;
+	  ++count;
+
+	  //F Matrix
+	  Eigen::Matrix3f upperf;
+	  upperf << 1, 0, -sin(dxt1.z()) * deltax + deltay, cos(dxt1.z()),
+	  			-cos(dxt1.z()) * deltax - deltay, sin(dxt1.z()),
+	  			0, 0, 1;
+
+	  //H Matrix
+	  Eigen::Matrix3f upperh;
+	  upperh << 1, 0, 0,
+	  			0, 1, 0,
+	  			0, 0, 1;  
+
+	  static Eigen::Matrix3f sigma;
+	  sigma << 0,0,0,0,0,0,0,0,0;
+	  Eigen::Matrix3f errormat;
+	  errormat << 0.01, 0, 0, 0, 0.04, 0, 0, 0, 0.64;
+
+	  sigma = upperf * sigma * upperf.transpose() + errormat;
+
+	  Eigen::Matrix3f kgain;
+	  Eigen::Matrix3f matrix;
+	  matrix << pow(0.3, 2), 0, 0, 0, pow(0.3, 2), 0, 0, 0, pow(0.4, 2);
+	  kgain = sigma * (sigma + matrix).inverse();
+
+	  Eigen::Vector3f ret;
+
+	  ret = dxt1;// + kgain * (-dxt1)
+
+	  tf::Vector3 trans(ret.x(), ret.y(), 0.0);
+	  tf::Quaternion rot;
+	  rot.setEuler(0.0, 0.0, ret.z());
+	  tf::Transform transform;
+	  transform.setOrigin(trans);
+	  transform.setRotation(rot);
+
+	  br.sendTransform(tf::StampedTransform(transform, encoder->header.stamp, "/odom_combined", encoder->header.frame_id));
 
 
 }
@@ -93,9 +137,8 @@ int main(int argc, char **argv)
 	v = M * v;
 	M = (M * M).transpose();
 	std::cout << M.inverse() << std::endl;*/
-		std::cout << "test0";
 
-	ros::init(argc, argv, "kurt_odometry");
+	ros::init(argc, argv, "ekf");
 	ros::NodeHandle n;
 	/*ros::Subscriber encoder_sub = n.subscribe("/encoder", 1, encoderCallback);
 	  ros::Subscriber sub = n.subscribe("/imu", 1, encoderCallback);
@@ -103,14 +146,10 @@ int main(int argc, char **argv)
 	*/
 	message_filters::Subscriber<kurt_msgs::Encoder> encoder_sub(n, "/encoder", 1);
 	message_filters::Subscriber<sensor_msgs::Imu> sub(n, "/imu", 1);
-		std::cout << "test0";
 	typedef message_filters::sync_policies::ApproximateTime<kurt_msgs::Encoder, sensor_msgs::Imu> MySyncPolicy;
-	std::cout << "test1";
 	message_filters::Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), encoder_sub, sub);
-	std::cout << "test2";
 	sync.registerCallback(boost::bind(&encoderCallback, _1, _2));
-		std::cout << "test3";
-
+	//exit(0);
 
 	ros::spin();
 
