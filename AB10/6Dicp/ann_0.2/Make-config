@@ -1,0 +1,42 @@
+#-----------------------------------------------------------------------
+# Makefile variations depending on different configurations
+#
+# ANN: Approximate Nearest Neighbors
+# Version: 0.1 (Beta release)
+#
+# (This Make-config structure is based on the one used by Mesa by Brian
+# Paul.  If you succeed in porting ANN to your favorite system, please
+# send email to mount@cs.umd.edu, and I'll try to include it in this
+# list.)
+#
+#----------------------------------------------------------------------
+# The following configuration-dependent variables are passed to each
+# the Makefile in subdirectories:
+#
+# ANNLIB	The name of the ANN library file (usually libANN.a)
+# C++		The C compiler (usually CC or g++)
+# MAKELIB	The command and flags to make a library file (usually
+#		    "ar ...")
+# CFLAGS	Flags to C compiler
+# RANLIB	For "ranlib" = use ranlib, "true" = don't use ranlib
+#----------------------------------------------------------------------
+# Revision 0.1  09/06/97
+#	Initial release
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
+# Compilation options:
+# 		-DPERF		Enable performance evaluation
+#				(may slow execution slightly)
+#-----------------------------------------------------------------------------
+#CFLAGS2 = -DPERF
+#CFLAGS2 = 
+
+default:
+	@$(MAKE) targets \
+	"ANNLIB = libANN.a" \
+	"C++ = g++" \
+	"CFLAGS = -O6" \
+	"MAKELIB = ar ru" \
+	"RANLIB = ranlib"
+
